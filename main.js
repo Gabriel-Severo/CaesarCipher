@@ -2,6 +2,7 @@ require('dotenv').config()
 const axios = require('axios')
 const sha1 = require('js-sha1')
 const fs = require('fs')
+const FormData = require('form-data')
 function resolvCipher(key, value){
     ascii = value.charCodeAt(0)
     if (ascii >= 97 && ascii <= 122){
@@ -39,4 +40,17 @@ async function writeFile(){
     })
 }
 
+async function sendFile(){
+    const form_data = new FormData()
+    form_data.append('answer', fs.createReadStream('answer.json'))
+    await axios.post(`https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=${process.env.TOKEN}`, form_data, {
+        headers: form_data.getHeaders()
+    }).then(res => {
+        console.log(res.data)
+    }).catch(err => {
+        console.log(err.response.data)
+    })
+}
+
 writeFile()
+sendFile()
