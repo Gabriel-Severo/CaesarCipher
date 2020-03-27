@@ -1,6 +1,7 @@
 require('dotenv').config()
 const axios = require('axios')
 const sha1 = require('js-sha1')
+const fs = require('fs')
 function resolvCipher(key, value){
     ascii = value.charCodeAt(0)
     if (ascii >= 97 && ascii <= 122){
@@ -30,8 +31,12 @@ async function createJson(){
     return json
 }
 
-async function test(){
-    console.log(await createJson())
+async function writeFile(){
+    const data = await createJson()
+    fs.writeFile('answer.json', JSON.stringify(data), {encoding: 'utf-8', flag: 'w'}, (err) => {
+        if(err) throw err
+        console.log('Arquivo escrito')
+    })
 }
 
-test()
+writeFile()
