@@ -1,10 +1,11 @@
 require('dotenv').config()
+const axios = require('axios')
 function resolvCipher(key, value){
     ascii = value.charCodeAt(0)
     if (ascii >= 97 && ascii <= 122){
         ascii -= key
         if (ascii < 97){
-            return String.fromCharCode(97 - ascii + 121)
+            return String.fromCharCode(122 - (96 - ascii))
         }else{
             return String.fromCharCode(ascii)
         }
@@ -13,9 +14,22 @@ function resolvCipher(key, value){
     }
 }
 
-const text = 'd oljhlud udsrvd pduurp vdowrx vreuh r fdfkruur fdqvdgr'
-let resolved = ''
-for (letter of text){
-    resolved += resolvCipher(3, letter)
+async function createJson(){
+    const response = await axios.get(`https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token=${process.env.TOKEN}`)
+    .catch(err => {
+        console.log(err)
+    })
+    const json = response.data
+    let resolved = ''
+    for (letter of json.cifrado){
+        resolved += resolvCipher(json.numero_casas, letter)
+    }
+    json.decifrado = resolved
+    return json
 }
-console.log(resolved)
+
+async function test(){
+    console.log(await createJson())
+}
+
+test()
