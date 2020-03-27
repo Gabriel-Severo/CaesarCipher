@@ -1,5 +1,6 @@
 require('dotenv').config()
 const axios = require('axios')
+const sha1 = require('js-sha1')
 function resolvCipher(key, value){
     ascii = value.charCodeAt(0)
     if (ascii >= 97 && ascii <= 122){
@@ -25,6 +26,7 @@ async function createJson(){
         resolved += resolvCipher(json.numero_casas, letter)
     }
     json.decifrado = resolved
+    json.resumo_criptografico = sha1(resolved)
     return json
 }
 
