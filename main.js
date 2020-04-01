@@ -41,6 +41,7 @@ async function writeFile(){
 }
 
 async function sendFile(){
+    await writeFile()
     const form_data = new FormData()
     form_data.append('answer', fs.createReadStream('answer.json'))
     await axios.post(`https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=${process.env.TOKEN}`, form_data, {
@@ -52,5 +53,4 @@ async function sendFile(){
     })
 }
 
-writeFile()
 sendFile()
